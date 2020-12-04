@@ -74,11 +74,12 @@ def create_model(city, p, d, q, P, D, Q, m):
                         order = (p, d, q),  
                         seasonal_order =(P, D, Q, m)) 
     result1 = model.fit()
+    
 
     forecast = result1.predict(start = len(city) -  104 ,
                               end = (len(city)) + 8,
                               typ = 'levels').rename('Forecast')
-    return result, forecast
+    return result, forecast, result1.summary()
 
 def create_predictions_plot(axs, cities, predictions):
     '''
@@ -116,9 +117,9 @@ cities = ['Niamey', 'Kuwait', 'Dubai']
 cities = create_cities(cities)
 # cities = create_time_series(cities)
 
-niamey_mod, niamey_forecast= create_model(cities[0], 1, 0, 0, 2, 1, 0, 4)
-kuwait_mod, kuwait_forecast = create_model(cities[1], 1 ,0, 2, 2, 1, 0, 4)
-dubai_mod, dubai_forecast = create_model(cities[2], 1, 0, 0, 2, 1, 0, 4)
+# niamey_mod, niamey_forecast, result1= create_model(cities[0], 1, 0, 0, 2, 1, 0, 4)
+# kuwait_mod, kuwait_forecast = create_model(cities[1], 1 ,0, 2, 2, 1, 0, 4)
+# dubai_mod, dubai_forecast = create_model(cities[2], 1, 0, 0, 2, 1, 0, 4)
 
 
 #Using AutoArima but it looks like a diff of 2 periods with a log of 1 will be best
@@ -129,14 +130,14 @@ if __name__ == '__main__':
     # print(cities)
 
     #Plots prediction values
-    fig, axs = plt.subplots(3, figsize=(20, 4), dpi = 200)
-    start = len(cities[0].iloc[:len(cities[0])- 52])
-    end = len(cities[0].iloc[:len(cities[0])- 52]) + len(cities[0].iloc[len(cities[0]) - 52:]) - 1
-    predictions1 = niamey_mod.predict(start, end, typ='levels').rename('Predictions')
-    predictions2 = kuwait_mod.predict(start, end, typ='levels').rename('Predictions')
-    predictions3 = dubai_mod.predict(start, end, typ='levels').rename('Predictions')
-    predlst = [predictions1, predictions2, predictions3]
-    create_predictions_plot(axs, cities, predlst)
+    # fig, axs = plt.subplots(3, figsize=(20, 4), dpi = 200)
+    # start = len(cities[0].iloc[:len(cities[0])- 52])
+    # end = len(cities[0].iloc[:len(cities[0])- 52]) + len(cities[0].iloc[len(cities[0]) - 52:]) - 1
+    # predictions1 = niamey_mod.predict(start, end, typ='levels').rename('Predictions')
+    # predictions2 = kuwait_mod.predict(start, end, typ='levels').rename('Predictions')
+    # predictions3 = dubai_mod.predict(start, end, typ='levels').rename('Predictions')
+    # predlst = [predictions1, predictions2, predictions3]
+    # create_predictions_plot(axs, cities, predlst)
     ## Creates a plot based on forecasting data
     # axs[0].plot(cities[0].iloc[-104:], label = 'Avg Temp', color = 'b')
     # axs[0].plot(niamey_forecast, label ='Forecast', color ='y', linewidth=2)
@@ -148,7 +149,7 @@ if __name__ == '__main__':
     # axs[2].plot(dubai_forecast, label ='Forecast', color ='y', linewidth=2)
     # axs[2].legend()
     # fig.tight_layout()
-    fig.tight_layout()
-    plt.xticks(fontsize = 16)
-    plt.show()
-    
+    # fig.tight_layout()
+    # plt.xticks(fontsize = 16)
+    # plt.show()
+    print(result1)

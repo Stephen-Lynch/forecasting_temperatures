@@ -24,7 +24,7 @@
  
  ![image](images/Rising_Temps_3_cities.png)
  
- One thing I found interesting about these cities is that their average yearly temperature hasn't gone up by much. There are certain spikes to be certain and the majority of them seem to be on some sort of upwards trend since 2008, however they're relatively flat lined at least compared to how I originally thought in terms of temperature increases. One thing to note here however is that every single one of these cities has a yearly average of over 80 degrees. Being from Colorado, it's hard to imagine living in a place that has weather that's so hot that it's yearly average temperature is something I would consider toasty here. Many of these places get much hotter than this, such as Niamey, Nigeria hitting a max just this year of 120 degrees Fahrenheit
+ One thing I found interesting about these cities is that their average yearly temperature hasn't gone up by much. There are certain spikes to be certain and the majority of them seem to be on some sort of upwards trend since 1995, however they're relatively flat lined at least compared to how I originally thought in terms of temperature increases. One thing to note here however is that every single one of these cities has a yearly average of over 80 degrees. Being from Colorado, it's hard to imagine living in a place that has weather that's so hot that it's yearly average temperature is something I would consider toasty here. Many of these places get much hotter than this, such as Niamey, Nigeria hitting a max just this year of 120 degrees Fahrenheit
 
  With all of this in mind, I wanted to move on and start working on my model. After doing some research on which machine learning model would perform best, I ended up deciding to apply a SARIMAX model to each of the cities, as it seemed to handle seasonality and general trends extremely well.
 
@@ -40,7 +40,7 @@
 
  ![image](images/forecast.png)
  
- While I didn't feel comfortable predicting too far into the future I did feel o.k predicting nearly 3 months into the future. While my data doesn't have anything past May of 2015 it did seem to predict relatively well the Avg Temperature before it over the span of around 2 years. I would like to get my hands on more data once the UN updates the average temperatures again to see how well this prediction fully turned out.
+ While I didn't feel comfortable predicting too far into the future I did feel o.k predicting nearly 3 months into the future. While my data doesn't have anything past May of 2020 it did seem to predict relatively well the Avg Temperature before it over the span of around 2 years. I would like to get my hands on more data once the UN updates the average temperatures again to see how well this prediction fully turned out.
  
 
  ## Future Steps: ##
