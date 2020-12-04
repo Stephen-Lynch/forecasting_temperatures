@@ -43,6 +43,7 @@ def plot_seasonal_decomposition(axs, series, sd):
     axs[2].set_title("Seasonal Component $S_t$")
     axs[3].plot(series.index, sd.resid)
     axs[3].set_title("Residual Component $R_t$")
+    
 
 def datetime_month(df):
     return pd.to_datetime(df[['Year', 'Month']].assign(day=1))
@@ -73,7 +74,7 @@ global_temp = df_create(city_temp_train, ['Region', 'Country', 'City', 'Day'],
 global_temp_year = df_create(city_temp_train, ['Region', 'Country', 'City', 'Day', 'Month'], ['Year'], reset_index = False)
 global_temp['Date'] = datetime_month(global_temp)
 global_temp = drop_month_year(global_temp)
-# seasonal_result = seasonal_decompose(global_temp, model='additive')
+seasonal_result = seasonal_decompose(global_temp, model='additive')
 
 
 
@@ -86,7 +87,7 @@ city_highest = city_highest.loc[city_highest['Year'] == 2016].sort_values('AvgTe
                                 
 
 # Creating the 5 cities I'm going to model
-niamey = city_temp.loc[city_temp['City'] == 'Niamey']
+niamey = city_temp_train.loc[city_temp_train['City'] == 'Niamey']
 niamey_year_ho = city_temp_ho.loc[city_temp_ho['City'] == 'Niamey']
 kuwait = city_temp_train.loc[city_temp_train['City'] == 'Kuwait']
 dubai = city_temp_train.loc[city_temp_train['City'] == 'Dubai']
@@ -108,17 +109,6 @@ dubai = df_create(dubai, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month']
 dubai_year = dubai.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
 dubai['Date'] = datetime_month(dubai)
 dubai = drop_month_year(dubai)
-
-doha = df_create(doha, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
-doha_year = doha.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
-doha['Date'] = datetime_month(doha)
-doha = drop_month_year(doha)
-
-chennai = df_create(chennai, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
-chennai_year = chennai.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
-chennai['Date'] = datetime_month(chennai)
-chennai = drop_month_year(chennai)
-
 
 ## ARIMA PORTION
 
@@ -150,34 +140,38 @@ forecast = result.predict(start = len(niamey) - 12  ,
 
 if __name__ == '__main__':
     ## Line graph for Seasonal decomp Global
-    # Creating seasonal dceomposition graph
-    # fig, axs = plt.subplots(4, figsize = (14, 12))
-    # plot_seasonal_decomposition(axs, global_temp, seasonal_result)
-    # fig.tight_layout()
-    # plt.show()
+    #Creating seasonal dceomposition graph
+    fig, axs = plt.subplots(4, figsize = (14, 12))
+    plot_seasonal_decomposition(axs, global_temp, seasonal_result)
+    fig.tight_layout()
+    
+    plt.show()
     
     # city_highest.head(1).plot.bar(color = 'b',figsize =(14,8))
     # plt.show()
     # fig, ax = plt.subplots(figsize=(12, 8))
-    fig, ax = plt.subplots(figsize=(20, 4))
-    start = len(train)
-    end = len(train) + len(test) - 1
+    # fig, ax = plt.subplots(figsize=(20, 4), dpi = 200)
+    # start = len(train)
+    # end = len(train) + len(test) - 1
 
-    predictions = result.predict(start, end, typ='levels').rename('Predictions')
+    # predictions = result.predict(start, end, typ='levels').rename('Predictions')
 
-    # Line graph of predictions and tests 
-    ax.plot(predictions, label= 'prediction')
-    ax.plot(test, label='Actual')
-    ax.legend()
+    # # Line graph of predictions and tests 
+    # ax.plot(predictions, label= 'prediction')
+    # ax.plot(test, label='Actual')
+    # ax.legend()
 
-    plt.show()
+    # plt.show()
     # ## Line graph of top 5 hottest cities
-    # # ax.plot(chennai_year, label = 'India, Chennai')
-    # # ax.plot(doha_year, label = 'Qatar, Doha')
-    # # ax.plot(kuwait_year, label = 'Kuwait, Kuwait')
-    # # ax.plot(niamey_year, label = 'Nigeria, Niamey')
-    # # ax.plot(dubai_year, label = 'UAE, Dubai')
-    # # ax.legend()
+    
+    # ax.plot(kuwait_year, label = 'Kuwait, Kuwait')
+    # ax.plot(niamey_year, label = 'Nigeria, Niamey')
+    # ax.plot(dubai_year, label = 'UAE, Dubai')
+    # ax.set_xlabel('Years', fontsize = 20)
+    # ax.set_ylabel('Temperature in F', fontsize = 20)
+    # plt.xticks(fontsize= 16)
+    # plt.yticks(fontsize = 16)
+    # ax.legend()
 
   
 
@@ -187,13 +181,13 @@ if __name__ == '__main__':
     # ax.legend()
 
     
-    ax.plot(niamey, label = 'Avg Temp', color = 'b')
-    ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
-    ax.legend()
+    # ax.plot(niamey, label = 'Avg Temp', color = 'b')
+    # ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
+    # ax.legend()
     
 
 
-    print(niamey.head())
+    
     
 
     #Line graph for Global temps rising
@@ -202,7 +196,5 @@ if __name__ == '__main__':
     # ax.set_title('Rising temperatures over 10 years', fontsize = 20)
     # ax.set_xlabel('Years', fontsize = 20)
     # ax.set_ylabel('Temperature in F', fontsize = 20)
-    # plt.xticks(fontsize= 16)
-    # plt.yticks(fontsize = 16)
-    plt.show()
+    
     
