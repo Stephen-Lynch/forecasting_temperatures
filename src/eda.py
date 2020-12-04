@@ -100,6 +100,8 @@ niamey = city_temp.loc[(city_temp['City'] == 'Niamey') & (city_temp['Year'] < 20
 kuwait = city_temp.loc[(city_temp['City'] == 'Kuwait') & (city_temp['Year'] < 2020)]
 dubai = city_temp.loc[(city_temp['City'] == 'Dubai') & (city_temp['Year'] < 2020)]
 
+
+#Creating monthly averages to plot later on
 niamey_year = niamey.drop(['Month', 'Day'], axis = 1).groupby('Year').mean('AvgTemperature')
 kuwait_year = kuwait.drop(['Month', 'Day'], axis = 1).groupby('Year').mean('AvgTemperature')
 dubai_year = dubai.drop(['Month', 'Day'], axis = 1).groupby('Year').mean('AvgTemperature')
@@ -128,15 +130,15 @@ if __name__ == '__main__':
     # fig.tight_layout()
     
     ## Line graph of top 5 hottest cities
-    fig, ax = plt.subplots(figsize = (14,8), dpi = 200)
-    ax.plot(kuwait_year, label = 'Kuwait, Kuwait')
-    ax.plot(niamey_year, label = 'Nigeria, Niamey')
-    ax.plot(dubai_year, label = 'UAE, Dubai')
-    ax.set_xlabel('Years', fontsize = 20)
-    ax.set_ylabel('Temperature in F', fontsize = 20)
-    plt.xticks(fontsize= 16)
-    plt.yticks(fontsize = 16)
-    ax.legend()
+    # fig, ax = plt.subplots(figsize = (14,8), dpi = 200)
+    # ax.plot(kuwait_year, label = 'Kuwait, Kuwait')
+    # ax.plot(niamey_year, label = 'Nigeria, Niamey')
+    # ax.plot(dubai_year, label = 'UAE, Dubai')
+    # ax.set_xlabel('Years', fontsize = 20)
+    # ax.set_ylabel('Temperature in F', fontsize = 20)
+    # plt.xticks(fontsize= 16)
+    # plt.yticks(fontsize = 16)
+    # ax.legend()
 
     #Line graph for Global temps rising
     # fig, ax = plt.subplots(figsize=(12, 8), dpi = 200)

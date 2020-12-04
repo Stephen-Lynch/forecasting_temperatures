@@ -1,4 +1,4 @@
-# forecasting_temperatures
+# Forecasting Rise In Temperatures
 
 
  With temperatures slowly on the rise and global warming on the forefront of every nations mind, I wanted to take a shot at making some visualizations to show just how much temperatures have risen in the past 10 years as well as predict what the temperatures may look like in the years to come for some of the worlds hottest cities.
