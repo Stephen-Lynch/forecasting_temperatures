@@ -86,19 +86,18 @@ city_highest = city_highest.loc[city_highest['Year'] == 2016].sort_values('AvgTe
                                 
 
 # Creating the 5 cities I'm going to model
-niamey = city_temp_train.loc[city_temp_train['City'] == 'Niamey']
+niamey = city_temp.loc[city_temp['City'] == 'Niamey']
 niamey_year_ho = city_temp_ho.loc[city_temp_ho['City'] == 'Niamey']
 kuwait = city_temp_train.loc[city_temp_train['City'] == 'Kuwait']
 dubai = city_temp_train.loc[city_temp_train['City'] == 'Dubai']
 doha = city_temp_train.loc[city_temp_train['City'] == 'Doha']
 chennai = city_temp_train.loc[city_temp_train['City'] == 'Chennai (Madras)']
 
-niamey = df_create(niamey, ['Region', 'Country'], ['Year', 'Month', 'Day', 'City'])
-niamey['Day'] = niamey['Day'].astype('datetime64[ns]')
-weekly_data = niamey.drop(['Year', 'Month'], axis = 1).groupby(['City', 'Day']).resample('W-Wed', label='right', closed = 'right', on='Day').mean().reset_index().sort_values(by='Day')
-# niamey_year = niamey.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
-# niamey['Date'] = datetime_month(niamey)
-# niamey = drop_month_year(niamey)
+niamey = df_create(niamey, ['Region', 'Country', 'Day', 'City'], ['Year', 'Month',])
+# weekly_data = niamey.drop(['Year', 'Month'], axis = 1).groupby(['City', 'Day']).resample('W-Wed', label='right', closed = 'right', on='Day').mean().reset_index().sort_values(by='Day')
+niamey_year = niamey.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
+niamey['Date'] = datetime_month(niamey)
+niamey = drop_month_year(niamey)
 
 kuwait = df_create(kuwait, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
 kuwait_year = kuwait.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
@@ -125,28 +124,28 @@ chennai = drop_month_year(chennai)
 
 
 
-## Using AutoArima but it looks like a diff of 2 periods with a log of 1 will be best
-# stepwise_fit = auto_arima(kuwait['AvgTemperature'], start_p = 1, start_q = 1, max_p = 5, max_q = 5, m = 4,
+# Using AutoArima but it looks like a diff of 2 periods with a log of 1 will be best
+# stepwise_fit = auto_arima(niamey['AvgTemperature'], start_p = 1, start_q = 1, max_p = 5, max_q = 5, m = 4,
 #                           start_P = 0, seasonal = True, d = None, D=1, trace = True, error_action = 'ignore',
 #                           suppress_warning = True, stepwise = True)
 
 
 
-train = dubai.iloc[:len(dubai)- 24]
-test = dubai.iloc[len(dubai) - 24:]
+train = niamey.iloc[:len(niamey)- 24]
+test = niamey.iloc[len(niamey) - 24:]
 
 model = SARIMAX(train,
                 order = (1, 0 ,0),
-                seasonal_order =(2, 0, 0, 4) )
+                seasonal_order =(2, 1, 2, 4) )
 result = model.fit()
 
-model = SARIMAX(dubai,  
+model = SARIMAX(niamey,  
                     order = (1, 0, 0),  
-                    seasonal_order =(2, 1, 1, 12)) 
+                    seasonal_order =(2, 1, 2, 4)) 
 result = model.fit()
 
-forecast = result.predict(start = len(dubai)  ,
-                          end = (len(dubai)) + 4,
+forecast = result.predict(start = len(niamey) - 12  ,
+                          end = (len(niamey)) + 12,
                           typ = 'levels').rename('Forecast')
 
 if __name__ == '__main__':
@@ -160,18 +159,18 @@ if __name__ == '__main__':
     # city_highest.head(1).plot.bar(color = 'b',figsize =(14,8))
     # plt.show()
     # fig, ax = plt.subplots(figsize=(12, 8))
-    # fig, ax = plt.subplots(figsize=(20, 4))
-    # start = len(train)
-    # end = len(train) + len(test) - 1
+    fig, ax = plt.subplots(figsize=(20, 4))
+    start = len(train)
+    end = len(train) + len(test) - 1
 
-    # predictions = result.predict(start, end, typ='levels').rename('Predictions')
+    predictions = result.predict(start, end, typ='levels').rename('Predictions')
 
-    # # Line graph of predictions and tests 
-    # ax.plot(predictions, label= 'prediction')
-    # ax.plot(test, label='Actual')
-    # ax.legend()
+    # Line graph of predictions and tests 
+    ax.plot(predictions, label= 'prediction')
+    ax.plot(test, label='Actual')
+    ax.legend()
 
-
+    plt.show()
     # ## Line graph of top 5 hottest cities
     # # ax.plot(chennai_year, label = 'India, Chennai')
     # # ax.plot(doha_year, label = 'Qatar, Doha')
@@ -182,22 +181,28 @@ if __name__ == '__main__':
 
   
 
-    # # fig, ax = plt.subplots(figsize=(20, 4))
-    # # ax.plot(dubai.iloc[len(niamey)-24:], label = 'Avg Temp', color = 'b')
-    # # ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
-    # # ax.legend()
-
-    
-    # ax.plot(dubai, label = 'Avg Temp', color = 'b')
+    # fig, ax = plt.subplots(figsize=(20, 4))
+    # ax.plot(niamey.iloc[len(niamey)-24:], label = 'Avg Temp', color = 'b')
     # ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
     # ax.legend()
+
+    
+    ax.plot(niamey, label = 'Avg Temp', color = 'b')
+    ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
+    ax.legend()
     
 
 
     print(niamey.head())
     
 
-    ##Line graph for Global temps rising
-    # fig, ax = plt.subplots(figsize=(12, 8))
+    #Line graph for Global temps rising
+    # fig, ax = plt.subplots(figsize=(12, 8), dpi = 200)
     # ax.plot(global_temp_year)
+    # ax.set_title('Rising temperatures over 10 years', fontsize = 20)
+    # ax.set_xlabel('Years', fontsize = 20)
+    # ax.set_ylabel('Temperature in F', fontsize = 20)
+    # plt.xticks(fontsize= 16)
+    # plt.yticks(fontsize = 16)
+    plt.show()
     

@@ -9,7 +9,7 @@
 
  I wanted to start out with something simple and just show a basic graph of global yearly average temperatures.
 
- yearly graph temps
+ ![image](images/Rising_Temps.png)
 
  It's hard to tell just by this, if there is any sort of general trend going on with our data or if there are just mostly seemingly random spikes in years. Also, I was honestly expecting this to show a much larger increase in temperature over an 11 year period even if it's based globally which would generally have smaller temperature increase. Anyways let's take a look at a seasonal decomposition of the averages globally by month to get a better grasp of what's going on.
  
