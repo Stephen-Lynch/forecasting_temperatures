@@ -18,9 +18,9 @@
  
 ![image](images/Seasonal_Decompose.png) 
 
- As you can see, albiet it seems to be a very small increase, there is a general trend in temperatures going up between the years 2005 and 2016. There also seems to be a seasonality trend, which comes as no surprise to anyone, however it is something I'm going to have to account for in the SARIMAX model.
+ This graph really surprised me, even with the data beforehand, I was expecting a much clearer looking general trend than the one we ended up getting in here. It still seems as if there is some sort of slow rise in the peaks, but it looks to be only a 1 to 2 degree difference even starting from 1995.
 
- Going forward, I wanted to figure out the 3 hottest cities based on their average yearly temperature as I believed these cities would be the best to model and show just how hot they're getting.
+ Going forward, I decided it would be best to instead look at the cities I would be choosing for my models to see if I noticed anything happening with them as well.
  
  ![image](images/Rising_Temps_3_cities.png)
  
@@ -29,21 +29,22 @@
  With all of this in mind, I wanted to move on and start working on my model. After doing some research on which machine learning model would perform best, I ended up deciding to apply a SARIMAX model to each of the cities, as it seemed to handle seasonality and general trends extremely well.
 
 
- ## Initial Data Analysis ##
+ ## SARIMAX Models ##
  ------------------------------
 
  ![image](images/Predictions.png)
 
- As you can see, our model does a very good job 
+ It looks like our model does an o.k job at predicting the temperatures, however it tends to favor it being hotter rather than colder, at least for this year of predictions. It also looks like it's captured some amount of general trend, which honestly surprised me. I was working with monthly averages on this data for the majority of it, which seemed to massively overfit the data and didn't capture anything happening besides the seasonality.
 
- 
+ With a good model, I decided to move on and start forecasting.
 
  ![image](images/forecast.png)
  
- Unfortunately, I wasn't able to get the Kuwait forecasting model to work, but with these other two it does seem to be overfitting just based on the seasonal trend itself.
+ While I didn't feel comfortable predicting too far into the future I did feel o.k predicting nearly 3 months into the future. While my data doesn't have anything past May of 2015 it did seem to predict relatively well the Avg Temperature before it over the span of around 2 years. I would like to get my hands on more data once the UN updates the average temperatures again to see how well this prediction fully turned out.
  
- Conclusions:
- My goal orginally with this project was to try and show how much temperatures are rising by showing just how hot the world's hottest cities are getting. It turns out I severely understimated just how slowly the average monthly temperatures are rising. This made it hard for my model to see a general trend happening at all, which makes it not a great predictor for the far future.
 
- Future Steps:
- As any data scientist would say, I would love to get my hands on more data to see if my model would then be able to predict the general trend any easier. Also fixing the overfitting on this model would seem Also instead of basing my predictions off of monthly values, perhaps I should have tried to go with weekly, or even daily to try and forecast better. Finally I believe working with different cities may have yielded better results in terms of picking up a trend, as many of these cities haven't seen a massive degree in difference between their average yearly in 2005 and average yearly in 2016.
+ ## Future Steps: ##
+ As any data scientist would say, I would love to get my hands on more data to see if my model would then be able to predict the general trend any easier. I'm sure in the next 10 to 20 years we'll start seeing a larger rise in temperatures if green house gas emissions continue to rise, and I would love to be able to model something with a more clearer general trend if that is the case. Finally, instead of picking 3 similar cities, located pretty close to the equator, I would like to pick 3 vastly differing cities of varying distances of equators. I believe this would have given a much better contrast between the models as well as give some variety in the inital EDA.
+
+ ## Conclusions: ##
+ My goal orginally with this project was to try and show how much temperatures are rising by showing just how hot the world's hottest cities are getting. It turns out even the UN doesn't seem to have nearly enough data to be able to fully predict that. While there does seem to be some sort of general rising trend in temperatures across the world, it's hard to tell just how much it really is rising. My models seem to be able to predict based off that rising trend somewhat, but it's just too small to make a massive difference in temperature based on the data I performed my models on.
