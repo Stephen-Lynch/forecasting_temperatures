@@ -3,15 +3,17 @@
 
  With temperatures slowly on the rise and global warming on the forefront of every nations mind, I wanted to take a shot at making some visualizations to show just how much temperatures have risen in the past 10 years as well as predict what the temperatures may look like in the years to come for some of the worlds hottest cities.
 
- I started out with a dataset from the United Nations which had the average temperature of any given day for cities all over the world ranging from the years 1995 to 2020. For the purposes of this project I focused on the years between 2005 and 2016 since many of the nations included in this didn't update their daily temperatures until around the year 2000.  
+ I started out with a dataset from the United Nations which had the average temperature of any given day for cities all over the world ranging from the years 1995 to 2020. Orignally the beginning of this data is very sparse, with many countries not recording their average daily temperature so I had to fix that up for the earlier years. Other than that, this was an extremely clean dataset to work with!
 
  ![image](images/Data.png)
 
- I wanted to start out with something simple and just show a basic graph of global yearly average temperatures.
+
+ ## Initial Data Analysis ##
+ ------------------------------
 
  ![image](images/Rising_Temps.png)
-
- It's hard to tell just by this, if there is any sort of general trend going on with our data or if there are just mostly seemingly random spikes in years. Also, I was honestly expecting this to show a much larger increase in temperature over an 11 year period even if it's based globally which would generally have smaller temperature increase. Anyways let's take a look at a seasonal decomposition of the averages globally by month to get a better grasp of what's going on.
+ 
+ To start off, I first wanted to see if I could spot some sort of general rising trend in temperatures over the years. Based just on this graph, it seems really hard to tell. In general there does seem to be some sort of rise, however it's not nearly as large of a rise as I was initially expecting. I also find it interesting to see that there does seem to be an almost random spike downwards and then back up around every 3 years or so. While I found this graph interesting, I wanted to double check and make sure there was some sort of general trend and performed a seasonal decompose on the monthly averages.
  
  
 ![image](images/Seasonal_Decompose.png) 
@@ -26,11 +28,15 @@
 
  With all of this in mind, I wanted to move on and start working on my model. After doing some research on which machine learning model would perform best, I ended up deciding to apply a SARIMAX model to each of the cities, as it seemed to handle seasonality and general trends extremely well.
 
+
+ ## Initial Data Analysis ##
+ ------------------------------
+
  ![image](images/Predictions.png)
 
- Since the general trend on these data points ended up being much smaller than that of the global as well as a lack of data, my model seems to have been overfit. Instead of picking monthly, I should have picked either weekly or daily data points for my model to adjust to.
+ As you can see, our model does a very good job 
 
- This isn't however going to stop me from forecasting anyways!
+ 
 
  ![image](images/forecast.png)
  
