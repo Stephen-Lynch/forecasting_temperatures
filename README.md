@@ -26,15 +26,15 @@
 
  With all of this in mind, I wanted to move on and start working on my model. After doing some research on which machine learning model would perform best, I ended up deciding to apply a SARIMAX model to each of the cities, as it seemed to handle seasonality and general trends extremely well.
 
- train vs test Graphs
+ ![image](images/Predictions.png)
 
- Since the general trend on these data points ended up being much smaller than that of the global, my model seems to have been overfit due to a lack of data.
+ Since the general trend on these data points ended up being much smaller than that of the global as well as a lack of data, my model seems to have been overfit. Instead of picking monthly, I should have picked either weekly or daily data points for my model to adjust to.
 
- forecasting graphs
+ This isn't however going to stop me from forecasting anyways!
 
-
-
- It looks like it failed to pick up on any general trend of rising temperatures which is what I was afraid of happening based on the yearly averages. Temperature incrases and decreases are just too small, at least based on a month by month average over the years for my model to be able to pick anything up.
+ ![image](images/forecast.png)
+ 
+ Unfortunately, I wasn't able to get the Kuwait forecasting model to work, but with these other two it does seem to be overfitting just based on the seasonal trend itself.
  
  Conclusions:
  My goal orginally with this project was to try and show how much temperatures are rising by showing just how hot the world's hottest cities are getting. It turns out I severely understimated just how slowly the average monthly temperatures are rising. This made it hard for my model to see a general trend happening at all, which makes it not a great predictor for the far future.

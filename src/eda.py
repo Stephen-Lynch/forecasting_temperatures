@@ -115,16 +115,16 @@ dubai = drop_month_year(dubai)
 
 
 # Using AutoArima but it looks like a diff of 2 periods with a log of 1 will be best
-# stepwise_fit = auto_arima(niamey['AvgTemperature'], start_p = 1, start_q = 1, max_p = 5, max_q = 5, m = 4,
+# stepwise_fit = auto_arima(dubai['AvgTemperature'], start_p = 1, start_q = 1, max_p = 5, max_q = 5, m = 4,
 #                           start_P = 0, seasonal = True, d = None, D=1, trace = True, error_action = 'ignore',
 #                           suppress_warning = True, stepwise = True)
 
 
 
-train = niamey.iloc[:len(niamey)- 24]
-test = niamey.iloc[len(niamey) - 24:]
+train1 = niamey.iloc[:len(niamey)- 24]
+test1 = niamey.iloc[len(niamey) - 24:]
 
-model = SARIMAX(train,
+model = SARIMAX(train1,
                 order = (1, 0 ,0),
                 seasonal_order =(2, 1, 2, 4) )
 result = model.fit()
@@ -132,34 +132,79 @@ result = model.fit()
 model = SARIMAX(niamey,  
                     order = (1, 0, 0),  
                     seasonal_order =(2, 1, 2, 4)) 
+result1 = model.fit()
+
+forecast1 = result.predict(start = len(niamey) - 12  ,
+                          end = (len(niamey)) + 12,
+                          typ = 'levels').rename('Forecast')
+
+train2 = kuwait.iloc[:len(kuwait)- 24]
+test2 = kuwait.iloc[len(kuwait) - 24:]
+
+model = SARIMAX(train2,
+                order = (1, 0 ,0),
+                seasonal_order =(2, 1, 1, 4) )
+result2 = model.fit()
+
+model = SARIMAX(kuwait,  
+                    order = (1, 0, 0),  
+                    seasonal_order =(2, 1, 1, 4)) 
+result2 = model.fit()
+
+forecast2 = result.predict(start = len(kuwait) - 12  ,
+                          end = (len(kuwait)) + 12,
+                          typ = 'levels').rename('Forecast')
+
+train3 = dubai.iloc[:len(dubai)- 24]
+test3 = dubai.iloc[len(dubai) - 24:]
+
+model = SARIMAX(train3,
+                order = (3, 0 ,3),
+                seasonal_order =(2, 1, 1, 4) )
+result3 = model.fit()
+
+model = SARIMAX(dubai,  
+                    order = (3, 0, 3),  
+                    seasonal_order =(2, 1, 1, 4)) 
 result = model.fit()
 
-forecast = result.predict(start = len(niamey) - 12  ,
-                          end = (len(niamey)) + 12,
+forecast3 = result.predict(start = len(dubai) - 12  ,
+                          end = (len(dubai)) + 12,
                           typ = 'levels').rename('Forecast')
 
 if __name__ == '__main__':
     ## Line graph for Seasonal decomp Global
     #Creating seasonal dceomposition graph
-    fig, axs = plt.subplots(4, figsize = (14, 12))
-    plot_seasonal_decomposition(axs, global_temp, seasonal_result)
-    fig.tight_layout()
+    # fig, axs = plt.subplots(4, figsize = (14, 12))
+    # plot_seasonal_decomposition(axs, global_temp, seasonal_result)
+    # fig.tight_layout()
     
-    plt.show()
+    # plt.show()
     
     # city_highest.head(1).plot.bar(color = 'b',figsize =(14,8))
     # plt.show()
     # fig, ax = plt.subplots(figsize=(12, 8))
-    # fig, ax = plt.subplots(figsize=(20, 4), dpi = 200)
-    # start = len(train)
-    # end = len(train) + len(test) - 1
+    fig, axs = plt.subplots(2, figsize=(20, 4), dpi = 200)
+    # start = len(train1)
+    # end = len(train1) + len(test1) - 1
 
-    # predictions = result.predict(start, end, typ='levels').rename('Predictions')
+    # predictions1 = result1.predict(start, end, typ='levels').rename('Predictions')
+    # predictions2 = result2.predict(start, end, typ='levels').rename('Predictions')
+    # predictions3 = result3.predict(start, end, typ='levels').rename('Predictions')
 
     # # Line graph of predictions and tests 
-    # ax.plot(predictions, label= 'prediction')
-    # ax.plot(test, label='Actual')
-    # ax.legend()
+    # axs[0].plot(predictions1, label= 'prediction')
+    # axs[0].plot(test1, label='Actual')
+    # axs[0].set_title('Nigeria, Niamey Average Temperature Monthly')
+    # axs[1].plot(predictions2, label= 'prediction')
+    # axs[1].plot(test2, label='Actual')
+    # axs[1].set_title('Kuwait, Kuwait Average Temperature Monthly')
+    # axs[1].legend()
+    # axs[2].plot(predictions3, label= 'prediction')
+    # axs[2].plot(test3, label='Actual')
+    # axs[2].set_title('UAE, Dubai Average Temperature Monthly')
+    
+    # fig.tight_layout()
 
     # plt.show()
     # ## Line graph of top 5 hottest cities
@@ -175,15 +220,21 @@ if __name__ == '__main__':
 
   
 
-    # fig, ax = plt.subplots(figsize=(20, 4))
-    # ax.plot(niamey.iloc[len(niamey)-24:], label = 'Avg Temp', color = 'b')
-    # ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
-    # ax.legend()
+    # fig, axs = plt.subplots((3, figsize=(20, 4))
+    # axs[0].plot(niamey.iloc[len(niamey)-24:], label = 'Avg Temp', color = 'b')
+    # axs[0].plot(forecast, label ='Forecast', color ='y', linewidth=2)
+    # axs[0].legend()
 
     
-    # ax.plot(niamey, label = 'Avg Temp', color = 'b')
-    # ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
-    # ax.legend()
+    axs[0].plot(niamey, label = 'Avg Temp', color = 'b')
+    axs[0].plot(forecast1, label ='Forecast', color ='y', linewidth=2)
+    axs[0].legend()
+    axs[0].set_title('Nigeria, Niamey Forecast Average Monthly Temp')
+    axs[1].plot(dubai, label = 'Avg Temp', color = 'b')
+    axs[1].plot(forecast3, label ='Forecast', color ='y', linewidth=2)
+    axs[1].legend()
+    axs[1].set_title('UAE, Dubai Forecast Average Monthly Temp')
+    fig.tight_layout()
     
 
 
@@ -196,5 +247,5 @@ if __name__ == '__main__':
     # ax.set_title('Rising temperatures over 10 years', fontsize = 20)
     # ax.set_xlabel('Years', fontsize = 20)
     # ax.set_ylabel('Temperature in F', fontsize = 20)
-    
+    plt.show()
     
