@@ -34,17 +34,15 @@
 
  ![image](images/Predictions.png)
 
- It looks like our model does an o.k job at predicting the temperatures, however it tends to favor it being hotter rather than colder, at least for this year of predictions. It also looks like it's captured some amount of general trend, which honestly surprised me. I was working with monthly averages on this data for the majority of it, which seemed to massively overfit the data and didn't capture anything happening besides the seasonality.
-
- With a good model, I decided to move on and start forecasting.
+ It looks like our model doesn't seem to be predicting as well I as I would hope. It seems to be sticking to some sort of trend far too much despite my efforts trying to make the data stationary. This isn't going to stop me from creating a forecrasting graph however.
 
  ![image](images/forecast.png)
  
- While I didn't feel comfortable predicting too far into the future I did feel o.k predicting nearly 3 months into the future. While my data doesn't have anything past May of 2020 it did seem to predict relatively well the Avg Temperature before it over the span of around 2 years. I would like to get my hands on more data once the UN updates the average temperatures again to see how well this prediction fully turned out.
+ At this point I just wanted to see what the model thinks is going to happen a few months into the "future" to see how far off it's performing in the long run. The answer is quite a bit. I'm sort of impressed at how well it tends to mimic the peaks and valleys, but it's super far off in terms of predicting anything meaningful for a forecast.
  
 
  ## Future Steps: ##
- As any data scientist would say, I would love to get my hands on more data to see if my model would then be able to predict the general trend any easier. I'm sure in the next 10 to 20 years we'll start seeing a larger rise in temperatures if green house gas emissions continue to rise, and I would love to be able to model something with a more clearer general trend if that is the case. Finally, instead of picking 3 similar cities, located pretty close to the equator, I would like to pick 3 vastly differing cities of varying distances of equators. I believe this would have given a much better contrast between the models as well as give some variety in the inital EDA.
+ The first thing I would like to do for this project going forward is get a better understanding of what the SARIMAX models in general. As it stands right now, I feel like I have a beginner level of knowledge on the model, which clearly wasn't enough to combat the underfitting of my data. If I did get this model working however, there are few things I wanted to try out. The first of course would be being able to show my original goal. I would also love to show other cities, such as ones in the U.S to make it more relateable for people here.
 
  ## Conclusions: ##
- My goal orginally with this project was to try and show how much temperatures are rising by showing just how hot the world's hottest cities are getting. It turns out even the UN doesn't seem to have nearly enough data to be able to fully predict that. While there does seem to be some sort of general rising trend in temperatures across the world, it's hard to tell just how much it really is rising. My models seem to be able to predict based off that rising trend somewhat, but it's just too small to make a massive difference in temperature based on the data I performed my models on.
+ My goal orginally with this project was to try and show how much temperatures are rising by showing just how hot the world's hottest cities are getting. While there does seem to be some sort of general rising trend in temperatures across the world, it's hard to tell just how much it really is rising. My models seem to be able to predict based off that rising trend somewhat, but it's just too small to make a massive difference in temperature based on the data I performed my models on.
