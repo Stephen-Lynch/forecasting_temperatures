@@ -5,7 +5,7 @@
 
  I started out with a dataset from the United Nations which had the average temperature of any given day for cities all over the world ranging from the years 1995 to 2020. For the purposes of this project I focused on the years between 2005 and 2016 since many of the nations included in this didn't update their daily temperatures until around the year 2000.  
 
- DATA HERE
+ ![image](images/Data.png)
 
  I wanted to start out with something simple and just show a basic graph of global yearly average temperatures.
 
@@ -28,7 +28,7 @@
 
  train vs test Graphs
 
- Unfortunately my model seems to be overfitting to each of the cities I picked and I wasn't 
+ Unfortunately my model seems to be overfitting with the data, however I believe this is an issue with shortening down my data to 10 years
 
  data vs holdout data
 
