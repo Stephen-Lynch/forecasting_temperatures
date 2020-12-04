@@ -35,6 +35,18 @@ def df_create(df, drop, groupby, reset_index = True):
         return temp_df
 
 def plot_seasonal_decomposition(axs, series, sd):
+    '''
+    Plots a time series decomposition based on a series and a seasonal
+    Decompose
+
+    Args:
+        axs - A graph on which to plot the decomposition
+        series - a Pandas series like object
+        sd - a Seasonal Decomposition of said object
+
+    Returns:
+        A plot of if plt.show() is in if __name__ == __main__
+    '''
     axs[0].plot(series.index, series)
     axs[0].set_title("Raw Series")
     axs[1].plot(series.index, sd.trend)
@@ -46,28 +58,39 @@ def plot_seasonal_decomposition(axs, series, sd):
     
 
 def datetime_month(df):
+    '''
+    Creates a datetime object consisting of years and months
+
+    Args:
+        df - Dataframe
+
+    Returns:
+        A series full of monthly date times
+    '''
     return pd.to_datetime(df[['Year', 'Month']].assign(day=1))
 
 def drop_month_year(df):
     '''
-    Creates a dataframe that 
+    Indexes the date and drops the year, month and date column
+
+    Args:
+        df - Dataframe
+
+    Returns:
+        A new dataframe with it's index in datetime as well as
+        column's dropped
     '''
     df.index = df.Date
     return df.drop(['Year', 'Month', 'Date'], axis = 1)
 
-# def city_ts(df):
-#     df['Date'] = df_create(df, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
-#     df = datetime_month(df)
-#     return drop_month_year(df)
-
 city_temp = pd.read_csv('data/cleaned_city_temps.csv')
 city_temp = city_temp.drop('Unnamed: 0', axis = 1)
-city_temp = city_temp.loc[city_temp['Year'] > 2004]
 city_temp_train = city_temp.loc[city_temp['Year'] < 2017]
-city_temp_ho = city_temp.loc[(city_temp['Year'] > 2016) * (city_temp['Year'] < 2019)]
+city_temp_ho = city_temp.loc[(city_temp['Year'] > 2016) 
+                            * (city_temp['Year'] < 2019)]
 
 
-#Created global_temp as a basic EDA for some cool graphs
+#Created global_temp as a basic EDA tool for some cool graphs
 #As well as do a Seasonal Decomposition for it
 global_temp = df_create(city_temp_train, ['Region', 'Country', 'City', 'Day'], 
                         ['Year', 'Month'])
@@ -76,37 +99,24 @@ global_temp['Date'] = datetime_month(global_temp)
 global_temp = drop_month_year(global_temp)
 seasonal_result = seasonal_decompose(global_temp, model='additive')
 
-
-
-city_highest = df_create(city_temp_train, ['Region',], 
-                                    ['Country', 'City', 'Year', 'Month', 'Day'])
-city_highest = city_highest.drop(['Day', 'Month'], axis = 1).groupby(['Country', 'City', 'Year']).mean().reset_index()
-city_highest = city_highest.loc[city_highest['Year'] == 2016].sort_values('AvgTemperature', ascending=False)
-
-
-                                
-
-# Creating the 5 cities I'm going to model
+# Creating the 3 cities I'm going to model
 niamey = city_temp_train.loc[city_temp_train['City'] == 'Niamey']
-niamey_year_ho = city_temp_ho.loc[city_temp_ho['City'] == 'Niamey']
 kuwait = city_temp_train.loc[city_temp_train['City'] == 'Kuwait']
 dubai = city_temp_train.loc[city_temp_train['City'] == 'Dubai']
-doha = city_temp_train.loc[city_temp_train['City'] == 'Doha']
-chennai = city_temp_train.loc[city_temp_train['City'] == 'Chennai (Madras)']
+
+niamey_year = niamey.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
+kuwait_year = kuwait.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
+dubai_year = dubai.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
 
 niamey = df_create(niamey, ['Region', 'Country', 'Day', 'City'], ['Year', 'Month',])
-# weekly_data = niamey.drop(['Year', 'Month'], axis = 1).groupby(['City', 'Day']).resample('W-Wed', label='right', closed = 'right', on='Day').mean().reset_index().sort_values(by='Day')
-niamey_year = niamey.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
 niamey['Date'] = datetime_month(niamey)
 niamey = drop_month_year(niamey)
 
 kuwait = df_create(kuwait, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
-kuwait_year = kuwait.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
 kuwait['Date'] = datetime_month(kuwait)
 kuwait = drop_month_year(kuwait)
 
 dubai = df_create(dubai, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
-dubai_year = dubai.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
 dubai['Date'] = datetime_month(dubai)
 dubai = drop_month_year(dubai)
 
@@ -121,56 +131,7 @@ dubai = drop_month_year(dubai)
 
 
 
-train1 = niamey.iloc[:len(niamey)- 24]
-test1 = niamey.iloc[len(niamey) - 24:]
 
-model = SARIMAX(train1,
-                order = (1, 0 ,0),
-                seasonal_order =(2, 1, 2, 4) )
-result = model.fit()
-
-model = SARIMAX(niamey,  
-                    order = (1, 0, 0),  
-                    seasonal_order =(2, 1, 2, 4)) 
-result1 = model.fit()
-
-forecast1 = result.predict(start = len(niamey) - 12  ,
-                          end = (len(niamey)) + 12,
-                          typ = 'levels').rename('Forecast')
-
-train2 = kuwait.iloc[:len(kuwait)- 24]
-test2 = kuwait.iloc[len(kuwait) - 24:]
-
-model = SARIMAX(train2,
-                order = (1, 0 ,0),
-                seasonal_order =(2, 1, 1, 4) )
-result2 = model.fit()
-
-model = SARIMAX(kuwait,  
-                    order = (1, 0, 0),  
-                    seasonal_order =(2, 1, 1, 4)) 
-result2 = model.fit()
-
-forecast2 = result.predict(start = len(kuwait) - 12  ,
-                          end = (len(kuwait)) + 12,
-                          typ = 'levels').rename('Forecast')
-
-train3 = dubai.iloc[:len(dubai)- 24]
-test3 = dubai.iloc[len(dubai) - 24:]
-
-model = SARIMAX(train3,
-                order = (3, 0 ,3),
-                seasonal_order =(2, 1, 1, 4) )
-result3 = model.fit()
-
-model = SARIMAX(dubai,  
-                    order = (3, 0, 3),  
-                    seasonal_order =(2, 1, 1, 4)) 
-result = model.fit()
-
-forecast3 = result.predict(start = len(dubai) - 12  ,
-                          end = (len(dubai)) + 12,
-                          typ = 'levels').rename('Forecast')
 
 if __name__ == '__main__':
     ## Line graph for Seasonal decomp Global
@@ -179,12 +140,9 @@ if __name__ == '__main__':
     # plot_seasonal_decomposition(axs, global_temp, seasonal_result)
     # fig.tight_layout()
     
-    # plt.show()
     
-    # city_highest.head(1).plot.bar(color = 'b',figsize =(14,8))
-    # plt.show()
     # fig, ax = plt.subplots(figsize=(12, 8))
-    fig, axs = plt.subplots(2, figsize=(20, 4), dpi = 200)
+    # fig, axs = plt.subplots(2, figsize=(20, 4), dpi = 200)
     # start = len(train1)
     # end = len(train1) + len(test1) - 1
 
@@ -203,12 +161,10 @@ if __name__ == '__main__':
     # axs[2].plot(predictions3, label= 'prediction')
     # axs[2].plot(test3, label='Actual')
     # axs[2].set_title('UAE, Dubai Average Temperature Monthly')
-    
     # fig.tight_layout()
 
-    # plt.show()
-    # ## Line graph of top 5 hottest cities
     
+    ## Line graph of top 5 hottest cities
     # ax.plot(kuwait_year, label = 'Kuwait, Kuwait')
     # ax.plot(niamey_year, label = 'Nigeria, Niamey')
     # ax.plot(dubai_year, label = 'UAE, Dubai')
@@ -226,15 +182,15 @@ if __name__ == '__main__':
     # axs[0].legend()
 
     
-    axs[0].plot(niamey, label = 'Avg Temp', color = 'b')
-    axs[0].plot(forecast1, label ='Forecast', color ='y', linewidth=2)
-    axs[0].legend()
-    axs[0].set_title('Nigeria, Niamey Forecast Average Monthly Temp')
-    axs[1].plot(dubai, label = 'Avg Temp', color = 'b')
-    axs[1].plot(forecast3, label ='Forecast', color ='y', linewidth=2)
-    axs[1].legend()
-    axs[1].set_title('UAE, Dubai Forecast Average Monthly Temp')
-    fig.tight_layout()
+    # axs[0].plot(niamey, label = 'Avg Temp', color = 'b')
+    # axs[0].plot(forecast1, label ='Forecast', color ='y', linewidth=2)
+    # axs[0].legend()
+    # axs[0].set_title('Nigeria, Niamey Forecast Average Monthly Temp')
+    # axs[1].plot(dubai, label = 'Avg Temp', color = 'b')
+    # axs[1].plot(forecast3, label ='Forecast', color ='y', linewidth=2)
+    # axs[1].legend()
+    # axs[1].set_title('UAE, Dubai Forecast Average Monthly Temp')
+    # fig.tight_layout()
     
 
 
@@ -247,5 +203,5 @@ if __name__ == '__main__':
     # ax.set_title('Rising temperatures over 10 years', fontsize = 20)
     # ax.set_xlabel('Years', fontsize = 20)
     # ax.set_ylabel('Temperature in F', fontsize = 20)
-    plt.show()
+    
     

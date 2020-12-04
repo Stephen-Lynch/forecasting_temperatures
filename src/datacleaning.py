@@ -22,6 +22,8 @@ def check_for_nulls(df, columns):
 #Creating initial dataset from which every other dataset will come from
 city_temp = pd.read_csv('city_temperature.csv', low_memory = False)
 city_temp = city_temp.drop(['State'], axis = 1).loc[city_temp['AvgTemperature'] > -90]
+city_temp = city_temp.loc[city_temp['Year'] > 2004]
+
 
 
 
