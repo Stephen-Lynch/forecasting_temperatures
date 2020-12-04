@@ -77,6 +77,29 @@ def create_model(city):
                               typ = 'levels').rename('Forecast')
     return result, forecast
 
+def create_predictions_plot(axs, cities, predictions):
+    '''
+    Creates a plot based on cities and predictions
+
+    ARGS:
+        axs - list of ax plots
+        cities - list of time series
+        predictions - list of model_predictions
+    
+    Return:
+        Plot if plt.show() is down below
+    '''
+    axs[0].plot(predictions[0], label= 'prediction')
+    axs[0].plot(cities[0].iloc[len(cities[0]) - 24:], label='Actual')
+    axs[0].set_title('Nigeria, Niamey Average Temperature Monthly')
+    axs[1].plot(predictions[1], label= 'prediction')
+    axs[1].plot(cities[1].iloc[len(cities[1]) - 24:], label='Actual')
+    axs[1].set_title('Kuwait, Kuwait Average Temperature Monthly')
+    axs[1].legend()
+    axs[2].plot(predictions[2], label= 'prediction')
+    axs[2].plot(cities[2].iloc[len(cities[2]) - 24:], label='Actual')
+    axs[2].set_title('UAE, Dubai Average Temperature Monthly')
+
 
 ## Instantiating the needed data to work with my SARIMAX models
 city_temp = pd.read_csv('data/cleaned_city_temps.csv')
@@ -98,32 +121,42 @@ kuwait_mod, kuwait_forecast = create_model(cities[1])
 dubai_mod, dubai_forecast = create_model(cities[2])
 
 # Using AutoArima but it looks like a diff of 2 periods with a log of 1 will be best
-# stepwise_fit = auto_arima(dubai['AvgTemperature'], start_p = 1, start_q = 1, max_p = 5, max_q = 5, m = 4,
-#                           start_P = 0, seasonal = True, d = None, D=1, trace = True, error_action = 'ignore',
-#                           suppress_warning = True, stepwise = True)
+# stepwise_fit = auto_arima(dubai['AvgTemperature'], start_p = 1, start_q = 1, max_p = 5, 
+#                      max_q = 5, m = 4 start_P = 0, seasonal = True, d = None, D=1, 
+#                     trace = True, error_action = 'ignore', suppress_warning = True, stepwise = True)
 
 
 if __name__ == '__main__':
     # print(cities)
 
     ##Plots prediction values
-    # fig, axs = plt.subplots(3, figsize=(20, 4), dpi = 200)
-    # start = len(cities[0].iloc[:len(cities[0])- 24])
-    # end = len(cities[0].iloc[:len(cities[0])- 24]) + len(cities[0].iloc[len(cities[0]) - 24:]) - 1
+    fig, axs = plt.subplots(3, figsize=(20, 4), dpi = 200)
+    start = len(cities[0].iloc[:len(cities[0])- 24])
+    end = len(cities[0].iloc[:len(cities[0])- 24]) + len(cities[0].iloc[len(cities[0]) - 24:]) - 1
 
-    # predictions1 = niamey_mod.predict(start, end, typ='levels').rename('Predictions')
-    # predictions2 = kuwait_mod.predict(start, end, typ='levels').rename('Predictions')
-    # predictions3 = dubai_mod.predict(start, end, typ='levels').rename('Predictions')
+    predictions1 = niamey_mod.predict(start, end, typ='levels').rename('Predictions')
+    predictions2 = kuwait_mod.predict(start, end, typ='levels').rename('Predictions')
+    predictions3 = dubai_mod.predict(start, end, typ='levels').rename('Predictions')
 
-    # axs[0].plot(predictions1, label= 'prediction')
-    # axs[0].plot(cities[0].iloc[len(cities[0]) - 24:], label='Actual')
-    # axs[0].set_title('Nigeria, Niamey Average Temperature Monthly')
-    # axs[1].plot(predictions2, label= 'prediction')
-    # axs[1].plot(cities[1].iloc[len(cities[1]) - 24:], label='Actual')
-    # axs[1].set_title('Kuwait, Kuwait Average Temperature Monthly')
+    predlst = [predictions1, predictions2, predictions3]
+
+    create_predictions_plot(axs, cities, predlst)
+
+
+    ## Creates a plot based on forecasting data
+    # fig, axs = plt.subplots((3, figsize=(20, 4))
+    # axs[0].plot(niamey.iloc[len(niamey)-24:], label = 'Avg Temp', color = 'b')
+    # axs[0].plot(forecast, label ='Forecast', color ='y', linewidth=2)
+    # axs[0].legend()
+
+
+    # axs[0].plot(niamey, label = 'Avg Temp', color = 'b')
+    # axs[0].plot(forecast1, label ='Forecast', color ='y', linewidth=2)
+    # axs[0].legend()
+    # axs[0].set_title('Nigeria, Niamey Forecast Average Monthly Temp')
+    # axs[1].plot(dubai, label = 'Avg Temp', color = 'b')
+    # axs[1].plot(forecast3, label ='Forecast', color ='y', linewidth=2)
     # axs[1].legend()
-    # axs[2].plot(predictions3, label= 'prediction')
-    # axs[2].plot(cities[2].iloc[len(cities[2]) - 24:], label='Actual')
-    # axs[2].set_title('UAE, Dubai Average Temperature Monthly')
+    # axs[1].set_title('UAE, Dubai Forecast Average Monthly Temp')
     # fig.tight_layout()
-    # plt.show()
+    plt.show()

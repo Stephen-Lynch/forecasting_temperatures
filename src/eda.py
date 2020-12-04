@@ -3,15 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from statsmodels.tsa.seasonal import seasonal_decompose
 plt.style.use('ggplot')
-from statsmodels.tsa.stattools import adfuller
-from pandas.plotting import register_matplotlib_converters
 import statsmodels.api as sm
-from pandas.plotting import autocorrelation_plot
-from pmdarima import auto_arima
 import warnings 
 warnings.filterwarnings("ignore") 
-from statsmodels.tsa.statespace.sarimax import SARIMAX
-from statsmodels.tools.eval_measures import rmse
+
 
 def df_create(df, drop, groupby, reset_index = True):
     '''
@@ -120,15 +115,6 @@ dubai = df_create(dubai, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month']
 dubai['Date'] = datetime_month(dubai)
 dubai = drop_month_year(dubai)
 
-## ARIMA PORTION
-
-
-
-# Using AutoArima but it looks like a diff of 2 periods with a log of 1 will be best
-# stepwise_fit = auto_arima(dubai['AvgTemperature'], start_p = 1, start_q = 1, max_p = 5, max_q = 5, m = 4,
-#                           start_P = 0, seasonal = True, d = None, D=1, trace = True, error_action = 'ignore',
-#                           suppress_warning = True, stepwise = True)
-
 
 
 
@@ -140,30 +126,6 @@ if __name__ == '__main__':
     # plot_seasonal_decomposition(axs, global_temp, seasonal_result)
     # fig.tight_layout()
     
-    
-    # fig, ax = plt.subplots(figsize=(12, 8))
-    # fig, axs = plt.subplots(2, figsize=(20, 4), dpi = 200)
-    # start = len(train1)
-    # end = len(train1) + len(test1) - 1
-
-    # predictions1 = result1.predict(start, end, typ='levels').rename('Predictions')
-    # predictions2 = result2.predict(start, end, typ='levels').rename('Predictions')
-    # predictions3 = result3.predict(start, end, typ='levels').rename('Predictions')
-
-    # # Line graph of predictions and tests 
-    # axs[0].plot(predictions1, label= 'prediction')
-    # axs[0].plot(test1, label='Actual')
-    # axs[0].set_title('Nigeria, Niamey Average Temperature Monthly')
-    # axs[1].plot(predictions2, label= 'prediction')
-    # axs[1].plot(test2, label='Actual')
-    # axs[1].set_title('Kuwait, Kuwait Average Temperature Monthly')
-    # axs[1].legend()
-    # axs[2].plot(predictions3, label= 'prediction')
-    # axs[2].plot(test3, label='Actual')
-    # axs[2].set_title('UAE, Dubai Average Temperature Monthly')
-    # fig.tight_layout()
-
-    
     ## Line graph of top 5 hottest cities
     # ax.plot(kuwait_year, label = 'Kuwait, Kuwait')
     # ax.plot(niamey_year, label = 'Nigeria, Niamey')
@@ -174,34 +136,9 @@ if __name__ == '__main__':
     # plt.yticks(fontsize = 16)
     # ax.legend()
 
-  
-
-    # fig, axs = plt.subplots((3, figsize=(20, 4))
-    # axs[0].plot(niamey.iloc[len(niamey)-24:], label = 'Avg Temp', color = 'b')
-    # axs[0].plot(forecast, label ='Forecast', color ='y', linewidth=2)
-    # axs[0].legend()
-
-    
-    # axs[0].plot(niamey, label = 'Avg Temp', color = 'b')
-    # axs[0].plot(forecast1, label ='Forecast', color ='y', linewidth=2)
-    # axs[0].legend()
-    # axs[0].set_title('Nigeria, Niamey Forecast Average Monthly Temp')
-    # axs[1].plot(dubai, label = 'Avg Temp', color = 'b')
-    # axs[1].plot(forecast3, label ='Forecast', color ='y', linewidth=2)
-    # axs[1].legend()
-    # axs[1].set_title('UAE, Dubai Forecast Average Monthly Temp')
-    # fig.tight_layout()
-    
-
-
-    
-    
-
     #Line graph for Global temps rising
     # fig, ax = plt.subplots(figsize=(12, 8), dpi = 200)
     # ax.plot(global_temp_year)
     # ax.set_title('Rising temperatures over 10 years', fontsize = 20)
     # ax.set_xlabel('Years', fontsize = 20)
     # ax.set_ylabel('Temperature in F', fontsize = 20)
-    
-    
