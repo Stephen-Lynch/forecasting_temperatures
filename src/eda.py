@@ -93,10 +93,12 @@ dubai = city_temp_train.loc[city_temp_train['City'] == 'Dubai']
 doha = city_temp_train.loc[city_temp_train['City'] == 'Doha']
 chennai = city_temp_train.loc[city_temp_train['City'] == 'Chennai (Madras)']
 
-niamey = df_create(niamey, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
-niamey_year = niamey.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
-niamey['Date'] = datetime_month(niamey)
-niamey = drop_month_year(niamey)
+niamey = df_create(niamey, ['Region', 'Country'], ['Year', 'Month', 'Day', 'City'])
+niamey['Day'] = niamey['Day'].astype('datetime64[ns]')
+weekly_data = niamey.drop(['Year', 'Month'], axis = 1).groupby(['City', 'Day']).resample('W-Wed', label='right', closed = 'right', on='Day').mean().reset_index().sort_values(by='Day')
+# niamey_year = niamey.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
+# niamey['Date'] = datetime_month(niamey)
+# niamey = drop_month_year(niamey)
 
 kuwait = df_create(kuwait, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
 kuwait_year = kuwait.drop('Month', axis = 1).groupby('Year').mean('AvgTemperature')
@@ -158,42 +160,44 @@ if __name__ == '__main__':
     # city_highest.head(1).plot.bar(color = 'b',figsize =(14,8))
     # plt.show()
     # fig, ax = plt.subplots(figsize=(12, 8))
-    fig, ax = plt.subplots(figsize=(20, 4))
-    start = len(train)
-    end = len(train) + len(test) - 1
+    # fig, ax = plt.subplots(figsize=(20, 4))
+    # start = len(train)
+    # end = len(train) + len(test) - 1
 
-    predictions = result.predict(start, end, typ='levels').rename('Predictions')
+    # predictions = result.predict(start, end, typ='levels').rename('Predictions')
 
-    # Line graph of predictions and tests 
-    ax.plot(predictions, label= 'prediction')
-    ax.plot(test, label='Actual')
-    ax.legend()
-
-
-    ## Line graph of top 5 hottest cities
-    # ax.plot(chennai_year, label = 'India, Chennai')
-    # ax.plot(doha_year, label = 'Qatar, Doha')
-    # ax.plot(kuwait_year, label = 'Kuwait, Kuwait')
-    # ax.plot(niamey_year, label = 'Nigeria, Niamey')
-    # ax.plot(dubai_year, label = 'UAE, Dubai')
+    # # Line graph of predictions and tests 
+    # ax.plot(predictions, label= 'prediction')
+    # ax.plot(test, label='Actual')
     # ax.legend()
+
+
+    # ## Line graph of top 5 hottest cities
+    # # ax.plot(chennai_year, label = 'India, Chennai')
+    # # ax.plot(doha_year, label = 'Qatar, Doha')
+    # # ax.plot(kuwait_year, label = 'Kuwait, Kuwait')
+    # # ax.plot(niamey_year, label = 'Nigeria, Niamey')
+    # # ax.plot(dubai_year, label = 'UAE, Dubai')
+    # # ax.legend()
 
   
 
-    # fig, ax = plt.subplots(figsize=(20, 4))
-    # ax.plot(dubai.iloc[len(niamey)-24:], label = 'Avg Temp', color = 'b')
-    # ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
-    # ax.legend()
+    # # fig, ax = plt.subplots(figsize=(20, 4))
+    # # ax.plot(dubai.iloc[len(niamey)-24:], label = 'Avg Temp', color = 'b')
+    # # ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
+    # # ax.legend()
 
     
-    ax.plot(dubai, label = 'Avg Temp', color = 'b')
-    ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
-    ax.legend()
+    # ax.plot(dubai, label = 'Avg Temp', color = 'b')
+    # ax.plot(forecast, label ='Forecast', color ='y', linewidth=2)
+    # ax.legend()
     
-    
+
+
+    print(niamey.head())
     
 
     ##Line graph for Global temps rising
     # fig, ax = plt.subplots(figsize=(12, 8))
     # ax.plot(global_temp_year)
-    plt.show()
+    
