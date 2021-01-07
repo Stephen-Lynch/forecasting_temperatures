@@ -76,8 +76,8 @@ def create_model(city, p, d, q, P, D, Q, m):
     result1 = model.fit()
     
 
-    forecast = result1.predict(start = len(city) -  104 ,
-                              end = (len(city)) + 8,
+    forecast = result1.predict(start = len(city) -  52 ,
+                              end = (len(city)) + 2,
                               typ = 'levels').rename('Forecast')
     return result, forecast
 
@@ -117,13 +117,13 @@ cities = ['Niamey', 'Kuwait', 'Dubai']
 cities = create_cities(cities)
 # cities = create_time_series(cities)
 
-niamey_mod, niamey_forecast = create_model(cities[0], 1, 0, 0, 2, 1, 0, 12)
-kuwait_mod, kuwait_forecast = create_model(cities[1], 1 ,0, 2, 2, 1, 0, 12)
-dubai_mod, dubai_forecast = create_model(cities[2], 1, 0, 0, 2, 1, 0, 12)
+niamey_mod, niamey_forecast = create_model(cities[0], 2, 0, 2, 2, 1, 0, 13)
+kuwait_mod, kuwait_forecast = create_model(cities[1], 2 ,0, 2, 2, 1, 0, 13)
+dubai_mod, dubai_forecast = create_model(cities[2], 2, 0, 0, 2, 1, 0, 13)
 
 
 #Using AutoArima but it looks like a diff of 2 periods with a log of 1 will be best
-# stepwise_fit = auto_arima(cities[2].dropna(), start_p = 1, start_q = 1, max_p = 2, max_q = 2, m = 4, start_P = 0, seasonal = True, d = None, D=1, trace = True, error_action = 'ignore', suppress_warning = True, stepwise = True)
+#stepwise_fit = auto_arima(cities[0].dropna(), start_p = 1, start_q = 1, max_p = 2, max_q = 2, m = 13, start_P = 0, seasonal = True, d = None, D=1, trace = True, error_action = 'ignore', suppress_warning = True, stepwise = True)
 
 
 if __name__ == '__main__':

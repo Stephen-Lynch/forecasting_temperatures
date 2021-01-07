@@ -6,6 +6,15 @@ plt.style.use('ggplot')
 import statsmodels.api as sm
 import warnings 
 warnings.filterwarnings("ignore") 
+from statsmodels.tsa.stattools import adfuller
+from pandas.plotting import register_matplotlib_converters
+import statsmodels.api as sm
+from pandas.plotting import autocorrelation_plot
+from pmdarima import auto_arima
+import warnings 
+warnings.filterwarnings("ignore") 
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+from statsmodels.tools.eval_measures import rmse
 
 
 def df_create(df, drop, groupby, reset_index = True):
@@ -78,45 +87,51 @@ def drop_month_year(df):
     df.index = df.Date
     return df.drop(['Year', 'Month', 'Date'], axis = 1)
 
-city_temp = pd.read_csv('data/cleaned_city_temps.csv')
-city_temp = city_temp.drop('Unnamed: 0', axis = 1)
+city_temps = pd.read_csv('data/col_city_temps.csv')
+city_temps = city_temps.drop('Unnamed: 0', axis = 1)
+
+col_temps =  city_temps.drop(['Country', 'State', 'City', 'Region'], axis = 1)
+col_temps['Date'] = pd.to_datetime(col_temps[['Year', 'Month', 'Day']])
+col_temps = col_temps.drop(['Month', 'Day', 'Year'], axis = 1)
+col_temps = col_temps.groupby('Date').mean()
+
 
 
 
 #Created global_temp as a basic EDA tool for some cool graphs
 #As well as do a Seasonal Decomposition for it
-global_temp = df_create(city_temp, ['Region', 'Country', 'City', 'Day'], 
-                        ['Year', 'Month'])
-global_temp_year = df_create(city_temp, ['Region', 'Country', 'City', 'Day', 'Month'], ['Year'])
-global_temp_year = global_temp_year.loc[global_temp_year['Year'] < 2020]
-global_temp_year.index = global_temp_year.Year
-global_temp_year = global_temp_year.drop('Year', axis = 1)
-global_temp['Date'] = datetime_month(global_temp)
-global_temp = drop_month_year(global_temp)
-seasonal_result = seasonal_decompose(global_temp, model='additive')
+# global_temp = df_create(city_temp, ['Region', 'Country', 'City', 'Day'], 
+#                         ['Year', 'Month'])
+# global_temp_year = df_create(city_temp, ['Region', 'Country', 'City', 'Day', 'Month'], ['Year'])
+# global_temp_year = global_temp_year.loc[global_temp_year['Year'] < 2020]
+# global_temp_year.index = global_temp_year.Year
+# global_temp_year = global_temp_year.drop('Year', axis = 1)
+# global_temp['Date'] = datetime_month(global_temp)
+# global_temp = drop_month_year(global_temp)
+result = seasonal_decompose(col_temps, model='additive', freq=365)
 
-# Creating the 3 cities I'm going to model
-niamey = city_temp.loc[(city_temp['City'] == 'Niamey') & (city_temp['Year'] < 2020)]
-kuwait = city_temp.loc[(city_temp['City'] == 'Kuwait') & (city_temp['Year'] < 2020)]
-dubai = city_temp.loc[(city_temp['City'] == 'Dubai') & (city_temp['Year'] < 2020)]
+# # Creating the 3 cities I'm going to model
+# niamey = city_temp.loc[(city_temp['City'] == 'Niamey') & (city_temp['Year'] < 2020)]
+# kuwait = city_temp.loc[(city_temp['City'] == 'Kuwait') & (city_temp['Year'] < 2020)]
+# dubai = city_temp.loc[(city_temp['City'] == 'Dubai') & (city_temp['Year'] < 2020)]
 
 
-#Creating monthly averages to plot later on
-niamey_year = niamey.drop(['Month', 'Day'], axis = 1).groupby('Year').mean('AvgTemperature')
-kuwait_year = kuwait.drop(['Month', 'Day'], axis = 1).groupby('Year').mean('AvgTemperature')
-dubai_year = dubai.drop(['Month', 'Day'], axis = 1).groupby('Year').mean('AvgTemperature')
+# #Creating monthly averages to plot later on
+# niamey_year = niamey.drop(['Month', 'Day'], axis = 1).groupby('Year').mean('AvgTemperature')
+# kuwait_year = kuwait.drop(['Month', 'Day'], axis = 1).groupby('Year').mean('AvgTemperature')
+# dubai_year = dubai.drop(['Month', 'Day'], axis = 1).groupby('Year').mean('AvgTemperature')
 
-niamey = df_create(niamey, ['Region', 'Country', 'Day', 'City'], ['Year', 'Month',])
-niamey['Date'] = datetime_month(niamey)
-niamey = drop_month_year(niamey)
+# niamey = df_create(niamey, ['Region', 'Country', 'Day', 'City'], ['Year', 'Month',])
+# niamey['Date'] = datetime_month(niamey)
+# niamey = drop_month_year(niamey)
 
-kuwait = df_create(kuwait, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
-kuwait['Date'] = datetime_month(kuwait)
-kuwait = drop_month_year(kuwait)
+# kuwait = df_create(kuwait, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
+# kuwait['Date'] = datetime_month(kuwait)
+# kuwait = drop_month_year(kuwait)
 
-dubai = df_create(dubai, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
-dubai['Date'] = datetime_month(dubai)
-dubai = drop_month_year(dubai)
+# dubai = df_create(dubai, ['Region', 'Country', 'City', 'Day'], ['Year', 'Month'])
+# dubai['Date'] = datetime_month(dubai)
+# dubai = drop_month_year(dubai)
 
 
 
@@ -126,9 +141,9 @@ if __name__ == '__main__':
     ## Line graph for Seasonal decomp Global
     #Creating seasonal dceomposition graph
     # fig, axs = plt.subplots(4, figsize = (14, 12), dpi = 100)
-    # plot_seasonal_decomposition(axs, global_temp, seasonal_result)
+    # plot_seasonal_decomposition(axs, col_temps, result)
     # fig.tight_layout()
-    
+
     ## Line graph of top 5 hottest cities
     # fig, ax = plt.subplots(figsize = (14,8), dpi = 200)
     # ax.plot(kuwait_year, label = 'Kuwait, Kuwait')
@@ -149,5 +164,8 @@ if __name__ == '__main__':
     # plt.xticks(fontsize = 16)
     
     # plt.xticks(fontsize = 16)
-    plt.show()
-
+    # yt = col_temps.diff()[1:]
+    # fig, ax = plt.subplots(1, figsize= (16, 4))
+    # sm.graphics.tsa.plot_pacf(yt, lags = 356)
+    # plt.show()
+    col_mod = SARIMAX(col_temps, order=(1, 1, 1), seasonal_order=(1, 1, 1, 90)).fit()
