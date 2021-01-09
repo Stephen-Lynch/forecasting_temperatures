@@ -94,6 +94,7 @@ col_temps =  city_temps.drop(['Country', 'State', 'City', 'Region'], axis = 1)
 col_temps['Date'] = pd.to_datetime(col_temps[['Year', 'Month', 'Day']])
 col_temps = col_temps.drop(['Month', 'Day', 'Year'], axis = 1)
 col_temps = col_temps.groupby('Date').mean()
+den_temps = city_temps[city_temps['City'] == 'Denver']
 
 
 
@@ -168,4 +169,4 @@ if __name__ == '__main__':
     # fig, ax = plt.subplots(1, figsize= (16, 4))
     # sm.graphics.tsa.plot_pacf(yt, lags = 356)
     # plt.show()
-    col_mod = SARIMAX(col_temps, order=(1, 1, 1), seasonal_order=(1, 1, 1, 90)).fit()
+    
