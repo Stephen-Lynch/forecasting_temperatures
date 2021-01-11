@@ -59,6 +59,7 @@ def plot_seasonal_decomposition(axs, series, sd):
     axs[2].set_title("Seasonal Component $S_t$")
     axs[3].plot(series.index, sd.resid)
     axs[3].set_title("Residual Component $R_t$")
+
     
 
 def datetime_month(df):

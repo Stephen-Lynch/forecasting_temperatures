@@ -41,56 +41,56 @@ def plot_seasonal_decomposition(axs, series, sd):
     axs[2].set_ylabel('Degrees', fontsize = 20)
     axs[2].set_xlabel('Date', fontsize = 20)
 
-city_temps = pd.read_csv('data/col_city_temps.csv')
-city_temps = city_temps.drop("Unnamed: 0", axis = 1)
-city_temp = pd.read_csv('data/city_temperature.csv')
+def time_series(city, df):
+    '''
+    Creates a time series based on a city name
 
-col_temps =  city_temps.drop(['Country', 'State', 'City', 'Region'], axis = 1)
-col_temps['Date'] = pd.to_datetime(col_temps[['Year', 'Month', 'Day']])
-col_temps = col_temps.drop(['Month', 'Day', 'Year'], axis = 1)
-col_temps = col_temps.groupby('Date').mean()
-col_temps = col_temps.resample('W-MON').mean()
+    Args:
+        city - String
+        df - Dataframe object
 
-den = city_temps[city_temps['City'] == 'Denver']
-den_2015 = den[(den['Year'] > 2005)]
-den_2015 =  den_2015.drop(['Country', 'State', 'City', 'Region'], axis = 1)
-den_2015['Date'] = pd.to_datetime(den_2015[['Year', 'Month', 'Day']])
-den = den_2015
-den_2015 = den_2015.drop(['Month', 'Day', 'Year'], axis = 1)
-den_2015 = den_2015.groupby('Date').mean()
+    Returns:
+        Dataframe Time Series
+    '''
+    cty = df[df['City'] == city]
+    cty = cty[cty['Year'] > 2005]
+    cty = cty.drop(['Country', 'State', 'City', 'Region'], axis = 1)
+    cty['Date'] = pd.to_datetime(cty[['Year', 'Month', 'Day']])
+    cty = cty.drop(['Month', 'Day', 'Year'], axis = 1)
+    cty = cty.groupby('Date').mean()
+    return cty
 
-san = city_temp[city_temp['City'] == 'Austin']
-san = san[(san['Year'] > 2005) & (san['State'] == 'Texas')]
-san =  san.drop(['Country', 'State', 'City', 'Region'], axis = 1)
-san['Date'] = pd.to_datetime(san[['Year', 'Month', 'Day']])
-san = san.drop(['Month', 'Day', 'Year'], axis = 1)
-san = san.groupby('Date').mean()
 
-# tr_start, tr_end = '2016', '2017'
-# te_start = '2017-01-01'
-# tra = den_2015[tr_start:tr_end]
-# tes = den_2015[te_start:]
-
-result = seasonal_decompose(den_2015['2010': ], model='additive', freq=365)
 
 if __name__ == '__main__':
-    fig, axs = plt.subplots(2, figsize=(24, 8), dpi = 200)
-    
-    axs[0].plot(den_2015['2015'], c='b')
-    axs[0].set_title('Daily Denver Temperature', fontsize = 24)
-    axs[0].set_ylim([0, 100])
-    axs[1].plot(san['2015'], c='r')
-    axs[1].set_title('Daily Austin Temperature', fontsize = 24)
-    axs[1].set_ylabel("°F", fontsize = 20)
-    axs[1].set_xlabel("Date", fontsize = 24)
-    axs[1].set_ylim([0, 100])
-    axs[0].set_ylabel("°F", fontsize = 20)
-    plt.setp(axs[0].get_xticklabels(), fontsize=20)
-    plt.setp(axs[0].get_yticklabels(), fontsize=20)
-    plt.setp(axs[1].get_xticklabels(), fontsize=20)
-    plt.setp(axs[1].get_yticklabels(), fontsize=20)
-    plt.show()
 
+    city_temps = pd.read_csv('data/col_city_temps.csv')
+    city_temps = city_temps.drop("Unnamed: 0", axis = 1)
+    city_temp = pd.read_csv('data/city_temperature.csv')
+
+    den_2015 = time_series("Denver", city_temp)
+    san = time_series("Austin", city_temp)
+
+    result = seasonal_decompose(den_2015['2010': ], model='additive', freq=365)
+   
+    ## Plotting Daily Time Series
+    # fig, axs = plt.subplots(2, figsize=(24, 8), dpi = 200)
+    # axs[0].plot(den_2015['2015'], c='b')
+    # axs[0].set_title('Daily Denver Temperature', fontsize = 24)
+    # axs[0].set_ylim([0, 100])
+    # axs[1].plot(san['2015'], c='r')
+    # axs[1].set_title('Daily Austin Temperature', fontsize = 24)
+    # axs[1].set_ylabel("°F", fontsize = 20)
+    # axs[1].set_xlabel("Date", fontsize = 24)
+    # axs[1].set_ylim([0, 100])
+    # axs[0].set_ylabel("°F", fontsize = 20)
+    # plt.setp(axs[0].get_xticklabels(), fontsize=20)
+    # plt.setp(axs[0].get_yticklabels(), fontsize=20)
+    # plt.setp(axs[1].get_xticklabels(), fontsize=20)
+    # plt.setp(axs[1].get_yticklabels(), fontsize=20)
+    # plt.show()
+
+    ## Plottting Seasonal Decomposition
     # fig, axs = plt.subplots(3, figsize = (24, 8), dpi = 200)
     # plt.setp(axs[0].get_xticklabels(), fontsize=20)
     # plt.setp(axs[0].get_yticklabels(), fontsize=20)
