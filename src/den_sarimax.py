@@ -5,7 +5,6 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 plt.style.use('ggplot')
 import statsmodels.api as sm
 import warnings 
-warnings.filterwarnings("ignore") 
 from statsmodels.tsa.stattools import adfuller
 from pandas.plotting import register_matplotlib_converters
 import statsmodels.api as sm
@@ -17,6 +16,7 @@ from statsmodels.tsa.statespace.sarimax import SARIMAX
 from statsmodels.tools.eval_measures import rmse
 from sklearn.metrics import mean_absolute_error as MAE
 import pickle
+
 
 def forecast_example(forecast):
     lst = []
@@ -38,11 +38,10 @@ def forecast_example(forecast):
             swim += 1
             shorts += 1
         elif temp <=59.999 and temp >= 30:
-            L_jack += 1
             sleeves += 1
             pants += 1
         elif temp <=29.999 and temp >= 10:
-            H_jack += 1
+            L_jack += 1
             sleeves += 1
             pants += 1
         elif temp <= 10:
@@ -87,23 +86,26 @@ forecast = model.predict(start = len(tra) ,
 # stepwise_fit = auto_arima(tra, start_p = 1, start_q = 1, max_p = 2, max_q = 2, m = 26, start_P = 0, seasonal = True, d = None, D=1)
 # , trace = True, error_action = 'ignore', suppress_warning = True, stepwise = True)
 if __name__ == '__main__':
-    # print(MAE(den_2015['2020-01-02':"2020-01-15"].values, forecast))
-    # fig, ax = plt.subplots(figsize=(20, 12), dpi = 200)
-    # plt.setp(ax.get_xticklabels(), fontsize=14)
-    # plt.setp(ax.get_yticklabels(), fontsize=14)
-    # ax.plot(den_2015['2020-01-02':"2020-01-15"], label= 'Actual Temperature', c = "b")
-    # ax.plot(forecast, label = 'Forecasted Temperature', c = "y")
-    # ax.set_xlabel("Date", fontsize = 20)
-    # ax.set_ylabel("Degrees in Fahrenheit", fontsize = 20)
-    # ax.set_title('Denver Forecasted Temperatures 14 days out', fontsize= 24)
-    # fig.tight_layout()
-    # ax.legend()
-    # plt.show()
-
-    fig, axs = plt.subplots(2, figsize=(20, 8), dpi = 200)
-    fig = sm.graphics.tsa.plot_acf(tra.diff().dropna(), lags =  180, ax = axs[0])
-    fig = sm.graphics.tsa.plot_pacf(tra.diff().dropna(), lags = 180, ax = axs[1], method='ywmle')
+    print(MAE(den_2015['2020-01-02':"2020-01-15"].values, forecast))
+    fig, ax = plt.subplots(figsize=(20, 12), dpi = 200)
+    plt.setp(ax.get_xticklabels(), fontsize=20)
+    plt.setp(ax.get_yticklabels(), fontsize=20)
+    ax.plot(den_2015['2019-12-23':"2020-01-15"], label= 'Actual Temperature', c = "b")
+    ax.plot(forecast, label = 'Forecasted Temperature', c = "black")
+    ax.set_xlabel("Date", fontsize = 20, c = 'black')
+    ax.set_ylabel("°F", fontsize = 20, c= 'black')
+    ax.set_title('Denver Forecasted Temperatures 14 Days', fontsize= 24)
+    ax.tick_params(axis='x', colors = 'black')
+    ax.tick_params(axis='y', colors = 'black')
+    plt.xticks(rotation=20)
+    fig.tight_layout()
+    ax.legend(fontsize = 18, loc='upper left')
     plt.show()
+
+    # fig, axs = plt.subplots(2, figsize=(20, 8), dpi = 200)
+    # fig = sm.graphics.tsa.plot_acf(tra.diff().dropna(), lags =  180, ax = axs[0])
+    # fig = sm.graphics.tsa.plot_pacf(tra.diff().dropna(), lags = 180, ax = axs[1], method='ywmle')
+    # plt.show()
 
     # lst = forecast_example(forecast)
 
@@ -128,12 +130,3 @@ if __name__ == '__main__':
     #     elif idx == 6:
     #         string +="Light Jacket: {}".format(item)
 
-    # print(" ")
-    # print(" ")
-    # print(" ")
-    # print(" ")
-    # print("  " + string)
-    # print(" ")
-    # print(" ")
-    # print(" ")
-    # print(" ")
