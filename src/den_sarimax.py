@@ -68,13 +68,8 @@ def time_series(city, df):
 
 
 if __name__ == '__main__':
-
     city_temps = pd.read_csv('data/col_city_temps.csv')
     city_temps = city_temps.drop('Unnamed: 0', axis = 1)
-
-    # stepwise_fit = auto_arima(tra, start_p = 1, start_q = 1, max_p = 2, 
-    # max_q = 2, m = 26, start_P = 0, seasonal = True, d = None, D=1)
-    # , trace = True, error_action = 'ignore', suppress_warning = True, stepwise = True)
 
     ##Creating and fitting the model
     den_2015 = time_series('Denver', city_temps)
@@ -95,8 +90,10 @@ if __name__ == '__main__':
     fig, ax = plt.subplots(figsize=(20, 12), dpi = 200)
     plt.setp(ax.get_xticklabels(), fontsize=20)
     plt.setp(ax.get_yticklabels(), fontsize=20)
-    ax.plot(den_2015['2019-12-23':"2020-01-15"], label= 'Actual Temperature', c = "b")
-    ax.plot(forecast, label = 'Forecasted Temperature', c = "black")
+    ax.plot(den_2015['2019-12-23':"2020-01-15"], label= 'Actual Temperature', c = "b", 
+            linewidth = 4.0)
+    ax.plot(forecast, label = 'Forecasted Temperature', c = "black",
+            linewidth = 4.0, marker = 'o')
     ax.set_xlabel("Date", fontsize = 20, c = 'black')
     ax.set_ylabel("°F", fontsize = 20, c= 'black')
     ax.set_title('Denver Forecasted Temperatures 14 Days', fontsize= 24)
@@ -105,16 +102,21 @@ if __name__ == '__main__':
     plt.xticks(rotation=20)
     fig.tight_layout()
     ax.legend(fontsize = 18, loc='upper left')
+    # ax.axhspan(50, 30, color = 'lime', alpha = .2)
+    # ax.axhspan(30,10, color = 'blue', alpha = .2)
+    ax.set_ylim([10,50])
     plt.show()
 
-    ## Creating
+    ## Creating acf plots
     # fig, axs = plt.subplots(2, figsize=(20, 8), dpi = 200)
     # fig = sm.graphics.tsa.plot_acf(tra.diff().dropna(), lags =  180, ax = axs[0])
     # fig = sm.graphics.tsa.plot_pacf(tra.diff().dropna(), lags = 180, ax = axs[1], method='ywmle')
     # plt.show()
 
+    
+    
+    ## Creating printout example of what forecasting with my program would look like
     # lst = forecast_example(forecast)
-
     # string = "\n\n\nBased On the Temperatures Between the Dates 1/2/2020 and 1/15/2020:\n"
     # suggestion = ""
     # for idx, item in enumerate(lst):
