@@ -6,15 +6,6 @@ plt.style.use('ggplot')
 import statsmodels.api as sm
 import warnings 
 warnings.filterwarnings("ignore") 
-from statsmodels.tsa.stattools import adfuller
-from pandas.plotting import register_matplotlib_converters
-import statsmodels.api as sm
-from pandas.plotting import autocorrelation_plot
-from pmdarima import auto_arima
-import warnings 
-warnings.filterwarnings("ignore") 
-from statsmodels.tsa.statespace.sarimax import SARIMAX
-from statsmodels.tools.eval_measures import rmse
 import pickle
 
 def plot_seasonal_decomposition(axs, series, sd):
@@ -69,7 +60,7 @@ if __name__ == '__main__':
     city_temp = pd.read_csv('data/city_temperature.csv')
 
     den_2015 = time_series("Denver", city_temp)
-    san = time_series("Austin", city_temp)
+    aus = time_series("Austin", city_temp)
 
     result = seasonal_decompose(den_2015['2010': ], model='additive', freq=365)
    

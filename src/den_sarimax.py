@@ -4,16 +4,13 @@ import numpy as np
 from statsmodels.tsa.seasonal import seasonal_decompose
 plt.style.use('ggplot')
 import statsmodels.api as sm
-import warnings 
 from statsmodels.tsa.stattools import adfuller
-from pandas.plotting import register_matplotlib_converters
 import statsmodels.api as sm
 from pandas.plotting import autocorrelation_plot
 from pmdarima import auto_arima
 import warnings 
 warnings.filterwarnings("ignore") 
 from statsmodels.tsa.statespace.sarimax import SARIMAX
-from statsmodels.tools.eval_measures import rmse
 from sklearn.metrics import mean_absolute_error as MAE
 import pickle
 
@@ -93,22 +90,22 @@ if __name__ == '__main__':
                               end = len(tra) + 13,
                               typ = 'levels').rename('Forecast')
 
-    ## Creating Time Series and Forecasting Plot
-    # print(MAE(den_2015['2020-01-02':"2020-01-15"].values, forecast))
-    # fig, ax = plt.subplots(figsize=(20, 12), dpi = 200)
-    # plt.setp(ax.get_xticklabels(), fontsize=20)
-    # plt.setp(ax.get_yticklabels(), fontsize=20)
-    # ax.plot(den_2015['2019-12-23':"2020-01-15"], label= 'Actual Temperature', c = "b")
-    # ax.plot(forecast, label = 'Forecasted Temperature', c = "black")
-    # ax.set_xlabel("Date", fontsize = 20, c = 'black')
-    # ax.set_ylabel("°F", fontsize = 20, c= 'black')
-    # ax.set_title('Denver Forecasted Temperatures 14 Days', fontsize= 24)
-    # ax.tick_params(axis='x', colors = 'black')
-    # ax.tick_params(axis='y', colors = 'black')
-    # plt.xticks(rotation=20)
-    # fig.tight_layout()
-    # ax.legend(fontsize = 18, loc='upper left')
-    # plt.show()
+    # Creating Time Series and Forecasting Plot
+    print(MAE(den_2015['2020-01-02':"2020-01-15"].values, forecast))
+    fig, ax = plt.subplots(figsize=(20, 12), dpi = 200)
+    plt.setp(ax.get_xticklabels(), fontsize=20)
+    plt.setp(ax.get_yticklabels(), fontsize=20)
+    ax.plot(den_2015['2019-12-23':"2020-01-15"], label= 'Actual Temperature', c = "b")
+    ax.plot(forecast, label = 'Forecasted Temperature', c = "black")
+    ax.set_xlabel("Date", fontsize = 20, c = 'black')
+    ax.set_ylabel("°F", fontsize = 20, c= 'black')
+    ax.set_title('Denver Forecasted Temperatures 14 Days', fontsize= 24)
+    ax.tick_params(axis='x', colors = 'black')
+    ax.tick_params(axis='y', colors = 'black')
+    plt.xticks(rotation=20)
+    fig.tight_layout()
+    ax.legend(fontsize = 18, loc='upper left')
+    plt.show()
 
     ## Creating
     # fig, axs = plt.subplots(2, figsize=(20, 8), dpi = 200)
@@ -116,28 +113,28 @@ if __name__ == '__main__':
     # fig = sm.graphics.tsa.plot_pacf(tra.diff().dropna(), lags = 180, ax = axs[1], method='ywmle')
     # plt.show()
 
-    lst = forecast_example(forecast)
+    # lst = forecast_example(forecast)
 
-    string = "\n\n\nBased On the Temperatures Between the Dates 1/2/2020 and 1/15/2020:\n"
-    suggestion = ""
-    for idx, item in enumerate(lst):
-        if item == 0:
-            continue
-        elif idx == 0:
-            string += "There are going to be {} days that are above 100 Degrees.\n".format(item)
-        elif idx == 1:
-            string += "Therea re going to be {} days that are between 99 and 60 degrees".format(item)
-        elif idx == 2:
-            string += "There are going to be {} days that are between 59 and 30 Degrees.\n".format(item)
-            if lst[idx] == max(lst):
-                suggestion = "Make sure to pack a Heavy Jacket and some long sleeved shirts!"
-        elif idx == 3:
-            string += "There are going to be {} days that are between 29 and 10 Degrees.\n".format(item)
-            if lst[idx] == max(lst):
-                suggestion = "Make sure to bring a Medium Jacket and some Hoodies."
-        elif idx == 4:
-            string += "There are going to be {} days that are below 10 Degrees.\n".format(item)
-            if lst[idx] == max(lst):
-                suggestion = "Make sure to bring a Heavy Jacket and either some Long Sleeved Shirts or some Sweaters."
+    # string = "\n\n\nBased On the Temperatures Between the Dates 1/2/2020 and 1/15/2020:\n"
+    # suggestion = ""
+    # for idx, item in enumerate(lst):
+    #     if item == 0:
+    #         continue
+    #     elif idx == 0:
+    #         string += "There are going to be {} days that are above 100 Degrees.\n".format(item)
+    #     elif idx == 1:
+    #         string += "Therea re going to be {} days that are between 99 and 60 degrees".format(item)
+    #     elif idx == 2:
+    #         string += "There are going to be {} days that are between 59 and 30 Degrees.\n".format(item)
+    #         if lst[idx] == max(lst):
+    #             suggestion = "Make sure to pack a Heavy Jacket and some long sleeved shirts!"
+    #     elif idx == 3:
+    #         string += "There are going to be {} days that are between 29 and 10 Degrees.\n".format(item)
+    #         if lst[idx] == max(lst):
+    #             suggestion = "Make sure to bring a Medium Jacket and some Hoodies."
+    #     elif idx == 4:
+    #         string += "There are going to be {} days that are below 10 Degrees.\n".format(item)
+    #         if lst[idx] == max(lst):
+    #             suggestion = "Make sure to bring a Heavy Jacket and either some Long Sleeved Shirts or some Sweaters."
 
-    print(string + suggestion + "\n\n\n")
+    # print(string + suggestion + "\n\n\n")
