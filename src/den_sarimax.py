@@ -118,7 +118,7 @@ if __name__ == '__main__':
 
     lst = forecast_example(forecast)
 
-    string = "\n\n\nBased On the Temperatures Between the Dates 1/2/2020 and 1/15/2020 in Denver, CO:\n"
+    string = "\n\n\nBased On the Temperatures Between the Dates 1/2/2020 and 1/15/2020:\n"
     suggestion = ""
     for idx, item in enumerate(lst):
         if item == 0:
@@ -140,4 +140,4 @@ if __name__ == '__main__':
             if lst[idx] == max(lst):
                 suggestion = "Make sure to bring a Heavy Jacket and either some Long Sleeved Shirts or some Sweaters."
 
-    print(string + suggestion)
+    print(string + suggestion + "\n\n\n")
